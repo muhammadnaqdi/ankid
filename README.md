@@ -18,7 +18,7 @@ Run the script using python/python3
 python3 ankid.py
 ```
 
-Input words followef by a carriage return and type `DONE` when you finished. The script then creates an Anki package file called `output.apkg`. Import this file using Anki app.
+Input words followed by a carriage return and type `DONE` when you finished. The script then creates an Anki package file called `output.apkg`. Import this file using Anki app.
 
 ## Features
 
