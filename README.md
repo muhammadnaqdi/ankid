@@ -4,7 +4,7 @@ An automatic flash card generator for Anki using Free Dictionary API
 
 ## Dependencies
 
-Install the fallowing dependencies using pip:
+Install the fallowing dependencies using pip
 
 ```shell
 pip install requests genanki
