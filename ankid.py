@@ -27,7 +27,7 @@ model = genanki.Model(
 deck_id = random.randrange(1 << 30, 1 << 31)
 deck = genanki.Deck(
     deck_id,
-    'Words'
+    'Ankid Words'
 )
 
 package = genanki.Package(deck)
@@ -103,32 +103,35 @@ def meaning_html(meanings):
         tmp += '<br>'
     return tmp
 
-
-word = input("Enter a word (or DONE to terminate): ")
-while word != "DONE":
-    url = "https://api.dictionaryapi.dev/api/v2/entries/en/" + word
+print('** Enter a word (or DONE to terminate) **')
+word = input('> ')
+while word != 'DONE':
+    url = 'https://api.dictionaryapi.dev/api/v2/entries/en/' + word
     try:
         resp = requests.get(url, allow_redirects = True)
     except:
-        print("Error connecting to the API!")
+        print('Error connecting to the API!')
         break
     data = resp.json()
     try:
         data[0]["word"]
     except:
-        print("Error finding word!")
-        word = input("Enter a word (or DONE to terminate): ")
+        print('Error finding word: ' + word)
+        word = input('> ')
         continue
     deck.add_note (
         genanki.Note(
             model = model,
             fields = [
-                data[0]["word"],
-                phonetic_html(data[0]["phonetics"], data[0]["word"]),
-                meaning_html(data[0]["meanings"])
+                data[0]['word'],
+                phonetic_html(data[0]['phonetics'], data[0]['word']),
+                meaning_html(data[0]['meanings'])
             ]       
         )
     )
-    word = input("Enter a word (or DONE to terminate): ")
+    word = input('> ')
+    
 package.media_files = media_files
 package.write_to_file('output.apkg')
+
+print("Package created successfully!")
