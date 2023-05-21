@@ -134,4 +134,4 @@ while word != 'DONE':
 package.media_files = media_files
 package.write_to_file('output.apkg')
 
-print("Package created successfully!")
+print("Package created!")
