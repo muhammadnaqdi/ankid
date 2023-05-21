@@ -48,6 +48,6 @@ cat words.txt | python3 ankid.py
 
 - pronunciation
 
-- examples
-
 - synonyms
+
+- examples
