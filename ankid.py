@@ -69,7 +69,7 @@ def meaning_html(meanings):
         if 'partOfSpeech' in me.keys():
             if me['partOfSpeech']:
                 tmp += '<b>' + me['partOfSpeech'] + '</b>' + '<br>'
-        if 'synonyms' in me:
+        if 'synonyms' in me.keys():
             if me['synonyms']:
                 tmp += '<i>(synonyms: '
                 first = True
