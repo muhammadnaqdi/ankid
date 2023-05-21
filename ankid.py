@@ -110,7 +110,7 @@ while word != "DONE":
     try:
         resp = requests.get(url, allow_redirects = True)
     except:
-        print("Error connecting to the api!")
+        print("Error connecting to the API!")
         break
     data = resp.json()
     try:
