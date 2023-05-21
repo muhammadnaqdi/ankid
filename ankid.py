@@ -74,18 +74,20 @@ def meaning_html(meanings):
                 tmp += '<i>(synonyms: '
                 first = True
                 for sy in me['synonyms']:
-                    if first:
-                        tmp += sy
-                        first = False
-                    else:
-                        tmp += ', ' + sy
+                    if sy:
+                        if first:
+                            tmp += sy
+                            first = False
+                        else:
+                            tmp += ', ' + sy
                 tmp += ')</i><br>'
         tmp += '<br>'
         if 'definitions' in me:
             for de in me['definitions']:
                 if 'definition' in de.keys():
-                    tmp += de["definition"]
-                    tmp += '<br>'
+                    if de["definition"]:
+                        tmp += de["definition"]
+                        tmp += '<br>'
                 if 'synonyms' in de.keys():
                     if de['synonyms']:
                         tmp += '<i>(synonyms: '
@@ -99,7 +101,8 @@ def meaning_html(meanings):
                                     tmp += ', ' + sy
                         tmp += ')</i><br>'
                 if 'example' in de.keys():
-                    tmp += '• ' + de["example"] + '<br>'
+                    if de["example"]:
+                        tmp += '• ' + de["example"] + '<br>'
                 tmp += '<br>'
         tmp += '<br>'
     return tmp
