@@ -26,7 +26,7 @@ On a Unix-like machine, you can also pipe text into the script using `cat` or `p
 printf "hello\nworld\nDONE\n" | python3 ankid.py
 ```
 
-Or write a `txt` file
+Or write a `.txt` file
 
 ```
 hello
