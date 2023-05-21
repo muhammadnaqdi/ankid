@@ -85,7 +85,7 @@ def meaning_html(meanings):
         for de in me['definitions']:
             if 'definition' in de.keys():
                 tmp += de["definition"]
-            tmp += '<br>'
+                tmp += '<br>'
             if de['synonyms']:
                 tmp += '<i>(synonyms: '
                 first = True
