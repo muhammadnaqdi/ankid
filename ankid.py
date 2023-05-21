@@ -132,6 +132,8 @@ while word != 'DONE':
     word = input('> ')
     
 package.media_files = media_files
-package.write_to_file('output.apkg')
-
-print("Package created!")
+try:
+    package.write_to_file('output.apkg')
+    print('Package created!')
+except:
+    print('Error creating package!')
