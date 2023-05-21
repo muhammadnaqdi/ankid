@@ -1,6 +1,6 @@
 # Ankid
 
-An automatic flash card generator for Anki using Free Dictionary API
+An automatic flash card generator for [Anki](https://apps.ankiweb.net/) using [Free Dictionary](https://dictionaryapi.dev/) API
 
 ## Dependencies
 
