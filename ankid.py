@@ -56,9 +56,9 @@ def phonetic_html(phonetics, word):
                     fo.write(aud.content)
                     fo.close()
                     media_files.append(path)
+                    tmp += '[sound:' + fname + ']'
                 except:
                     print('Error saving audio!')
-                tmp += '[sound:' + fname + ']'
         tmp += '<br>'
         phc += 1
     return tmp
