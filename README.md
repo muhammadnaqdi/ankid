@@ -40,7 +40,7 @@ Then
 cat words.txt | python3 ankid.py
 ```
 
-It is also possible to use the script with rlwrap to get a REPL-like experience
+It is also possible to use the script with `rlwrap` to get a REPL-like experience
 
 ```shell
 rlwrap python3 ankid.py
