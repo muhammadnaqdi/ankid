@@ -3,7 +3,7 @@ import os
 import random
 import genanki
 
-model_id = random.randrange(1 << 30, 1 << 31)
+model_id = 2038577668
 model = genanki.Model(
     model_id,
     'Free Dictionary',
