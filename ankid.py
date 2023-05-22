@@ -37,7 +37,7 @@ if not os.path.isdir('media'):
     try:
         os.mkdir('media')
     except:
-        print('Error creating media directory!')
+        print('** Error creating media directory **')
 
 def phonetic_html(phonetics, word):
     tmp = ''
@@ -58,7 +58,7 @@ def phonetic_html(phonetics, word):
                     media_files.append(path)
                     tmp += '[sound:' + fname + ']'
                 except:
-                    print('Error saving audio!')
+                    print('** Error saving audio **')
         tmp += '<br>'
         phc += 1
     return tmp
@@ -114,13 +114,13 @@ while word != 'DONE':
     try:
         resp = requests.get(url, allow_redirects = True)
     except:
-        print('Error connecting to the API!')
+        print('** Error connecting to the API **')
         break
     data = resp.json()
     try:
         data[0]["word"]
     except:
-        print('Error finding word: ' + word)
+        print('** Error finding word: ' + word + ' **')
         word = input('> ')
         continue
     deck.add_note (
@@ -138,6 +138,6 @@ while word != 'DONE':
 package.media_files = media_files
 try:
     package.write_to_file('output.apkg')
-    print('Package created!')
+    print('** Package created **')
 except:
-    print('Error creating package!')
+    print('** Error creating package **')
