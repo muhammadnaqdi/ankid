@@ -107,6 +107,7 @@ def meaning_html(meanings):
         tmp += '<br>'
     return tmp
 
+attempt = 1
 print('** Enter a word (or DONE to terminate) **')
 word = input('> ')
 while word != 'DONE':
@@ -114,9 +115,15 @@ while word != 'DONE':
     try:
         resp = requests.get(url, allow_redirects = True)
     except:
-        print('** Error connecting to the API **')
-        word = input('> ')
-        continue
+        print('** Error connecting to the API attempt: ' + str(attempt) + '/3 word: ' + word + ' **')
+        if attempt < 3:
+            attempt += 1
+            continue
+        else:
+            attempt = 1
+            word = input('> ')
+            continue
+    attempt = 1
     data = resp.json()
     try:
         data[0]["word"]
