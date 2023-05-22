@@ -115,7 +115,8 @@ while word != 'DONE':
         resp = requests.get(url, allow_redirects = True)
     except:
         print('** Error connecting to the API **')
-        break
+        word = input('> ')
+        continue
     data = resp.json()
     try:
         data[0]["word"]
