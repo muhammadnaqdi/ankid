@@ -2,6 +2,13 @@ import requests
 import os
 import random
 import genanki
+from multiprocessing import Process, Manager, Value
+import time
+from ctypes import c_char_p
+
+manager = Manager()
+phonetic_m = manager.Value(c_char_p, '')
+media_files = manager.list()
 
 model_id = 2038577668
 model = genanki.Model(
@@ -31,8 +38,6 @@ deck = genanki.Deck(
 
 package = genanki.Package(deck)
 
-media_files = []
-
 if not os.path.isdir('media'):
     try:
         os.mkdir('media')
@@ -58,9 +63,10 @@ def phonetic_html(phonetics, word):
                     media_files.append(path)
                     tmp += '[sound:' + fname + ']'
                 except:
-                    print('** Error saving audio **')
+                    print('** Error saving audio word: ' + word + ' **')
         tmp += '<br>'
         phc += 1
+    phonetic_m.value = tmp
     return tmp
 
 def meaning_html(meanings):
@@ -131,12 +137,21 @@ while word != 'DONE':
         print('** Error finding word: ' + word + ' **')
         word = input('> ')
         continue
+    ph_p = Process(target = phonetic_html, args = (data[0]['phonetics'], data[0]['word']))
+    ph_p.start()
+    ph_p.join(60)
+    if ph_p.is_alive():
+        print('** Error saving audio word: ' + word + ' **')
+        ph_p.terminate()
+        ph_p.join()
+        word = input('> ')
+        continue
     deck.add_note (
         genanki.Note(
             model = model,
             fields = [
                 data[0]['word'],
-                phonetic_html(data[0]['phonetics'], data[0]['word']),
+                phonetic_m.value,
                 meaning_html(data[0]['meanings'])
             ]       
         )
