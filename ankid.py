@@ -8,7 +8,8 @@ from ctypes import c_char_p
 
 manager = Manager()
 phonetic_m = manager.Value(c_char_p, '')
-media_files = manager.list()
+media_files_m = manager.list()
+status_m = manager.Value('i', 0)
 
 model_id = 2038577668
 model = genanki.Model(
@@ -45,14 +46,17 @@ if not os.path.isdir('media'):
         print('** Error creating media directory **')
 
 def phonetic_html(phonetics, word):
-    tmp = ''
+    phonetic_m.value = ''
     phc = 0;
     for ph in phonetics:
+        empty = True
         if 'text' in ph.keys():
             if ph["text"]:
-                tmp += '<i>' + ph["text"] +'</i>'
+                empty = False
+                phonetic_m.value += '<i>' + ph["text"] +'</i>'
         if 'audio' in ph.keys():
             if ph["audio"]:
+                empty = False
                 fname =  word + str(phc) + '.mp3'
                 path = os.path.join('media', fname)
                 try:
@@ -60,14 +64,14 @@ def phonetic_html(phonetics, word):
                     fo = open(path, 'wb')
                     fo.write(aud.content)
                     fo.close()
-                    media_files.append(path)
-                    tmp += '[sound:' + fname + ']'
+                    media_files_m.append(path)
+                    phonetic_m.value += '[sound:' + fname + ']'
                 except:
                     print('** Error saving audio word: ' + word + ' **')
-        tmp += '<br>'
-        phc += 1
-    phonetic_m.value = tmp
-    return tmp
+                    status_m.value = 1
+        if not empty:
+            phonetic_m.value += '<br>'
+            phc += 1
 
 def meaning_html(meanings):
     tmp = ''
@@ -137,13 +141,17 @@ while word != 'DONE':
         print('** Error finding word: ' + word + ' **')
         word = input('> ')
         continue
+    status_m.value = 0
     ph_p = Process(target = phonetic_html, args = (data[0]['phonetics'], data[0]['word']))
     ph_p.start()
     ph_p.join(60)
     if ph_p.is_alive():
-        print('** Error saving audio word: ' + word + ' **')
+        print('** Error saving audio (time out) word: ' + word + ' **')
         ph_p.terminate()
         ph_p.join()
+        word = input('> ')
+        continue
+    if status_m.value == 1:
         word = input('> ')
         continue
     deck.add_note (
@@ -158,7 +166,7 @@ while word != 'DONE':
     )
     word = input('> ')
     
-package.media_files = media_files
+package.media_files = media_files_m
 try:
     package.write_to_file('output.apkg')
     print('** Package created **')
