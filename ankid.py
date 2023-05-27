@@ -42,6 +42,7 @@ media_files = []
 def phonetic_html(phonetics, word):
     tmp = ''
     phc = 0;
+    mf = []
     for ph in phonetics:
         empty = True
         if 'text' in ph.keys():
@@ -61,11 +62,12 @@ def phonetic_html(phonetics, word):
                 except:
                     print('** Error saving audio word: ' + word + ' **')
                     return False, ''
-                media_files.append(path)
+                mf.append(path)
                 tmp += '[sound:' + fname + ']'
         if not empty:
             tmp += '<br>'
             phc += 1
+    media_files.extend(mf)
     return True, tmp
 
 def meaning_html(meanings):
