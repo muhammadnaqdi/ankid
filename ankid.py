@@ -40,7 +40,6 @@ if not os.path.isdir('media'):
 media_files = []
         
 def phonetic_html(phonetics, word):
-    status = True
     tmp = ''
     phc = 0;
     for ph in phonetics:
@@ -59,15 +58,15 @@ def phonetic_html(phonetics, word):
                     fo = open(path, 'wb')
                     fo.write(aud.content)
                     fo.close()
-                    media_files.append(path)
-                    tmp += '[sound:' + fname + ']'
                 except:
                     print('** Error saving audio word: ' + word + ' **')
-                    status = False
+                    return False, ''
+                media_files.append(path)
+                tmp += '[sound:' + fname + ']'
         if not empty:
             tmp += '<br>'
             phc += 1
-    return status, tmp
+    return True, tmp
 
 def meaning_html(meanings):
     tmp = ''
