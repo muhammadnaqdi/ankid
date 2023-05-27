@@ -46,6 +46,7 @@ if not os.path.isdir('media'):
         print('** Error creating media directory **')
 
 def phonetic_html(phonetics, word):
+    status_m.value = 0
     phonetic_m.value = ''
     phc = 0;
     for ph in phonetics:
@@ -141,7 +142,6 @@ while word != 'DONE':
         print('** Error finding word: ' + word + ' **')
         word = input('> ')
         continue
-    status_m.value = 0
     ph_p = Process(target = phonetic_html, args = (data[0]['phonetics'], data[0]['word']))
     ph_p.start()
     ph_p.join(60)
