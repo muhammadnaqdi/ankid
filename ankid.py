@@ -2,14 +2,6 @@ import requests
 import os
 import random
 import genanki
-from multiprocessing import Process, Manager, Value
-import time
-from ctypes import c_char_p
-
-manager = Manager()
-phonetic_m = manager.Value(c_char_p, '')
-media_files_m = manager.list()
-status_m = manager.Value('i', 0)
 
 model_id = 2038577668
 model = genanki.Model(
@@ -45,34 +37,37 @@ if not os.path.isdir('media'):
     except:
         print('** Error creating media directory **')
 
+media_files = []
+        
 def phonetic_html(phonetics, word):
-    status_m.value = 0
-    phonetic_m.value = ''
+    status = True
+    tmp = ''
     phc = 0;
     for ph in phonetics:
         empty = True
         if 'text' in ph.keys():
             if ph["text"]:
                 empty = False
-                phonetic_m.value += '<i>' + ph["text"] +'</i>'
+                tmp += '<i>' + ph["text"] +'</i>'
         if 'audio' in ph.keys():
             if ph["audio"]:
                 empty = False
                 fname =  word + str(phc) + '.mp3'
                 path = os.path.join('media', fname)
                 try:
-                    aud = requests.get(ph["audio"], allow_redirects = True)
+                    aud = requests.get(ph["audio"], allow_redirects = True, timeout = 60)
                     fo = open(path, 'wb')
                     fo.write(aud.content)
                     fo.close()
-                    media_files_m.append(path)
-                    phonetic_m.value += '[sound:' + fname + ']'
+                    media_files.append(path)
+                    tmp += '[sound:' + fname + ']'
                 except:
                     print('** Error saving audio word: ' + word + ' **')
-                    status_m.value = 1
+                    status = False
         if not empty:
-            phonetic_m.value += '<br>'
+            tmp += '<br>'
             phc += 1
+    return status, tmp
 
 def meaning_html(meanings):
     tmp = ''
@@ -142,16 +137,8 @@ while word != 'DONE':
         print('** Error finding word: ' + word + ' **')
         word = input('> ')
         continue
-    ph_p = Process(target = phonetic_html, args = (data[0]['phonetics'], data[0]['word']))
-    ph_p.start()
-    ph_p.join(60)
-    if ph_p.is_alive():
-        print('** Error saving audio (time out) word: ' + word + ' **')
-        ph_p.terminate()
-        ph_p.join()
-        word = input('> ')
-        continue
-    if status_m.value == 1:
+    status, phonetic = phonetic_html(data[0]['phonetics'], data[0]['word'])
+    if not status:
         word = input('> ')
         continue
     deck.add_note (
@@ -159,14 +146,14 @@ while word != 'DONE':
             model = model,
             fields = [
                 data[0]['word'],
-                phonetic_m.value,
+                phonetic,
                 meaning_html(data[0]['meanings'])
             ]       
         )
     )
     word = input('> ')
     
-package.media_files = media_files_m
+package.media_files = media_files
 try:
     package.write_to_file('output.apkg')
     print('** Package created **')
