@@ -11,7 +11,7 @@ model = genanki.Model(
     fields = [
         {'name': 'Word'},
         {'name': 'Phonetic'},
-        {'name': "Meanings"}
+        {'name': 'Meanings'}
     ],
 
     templates = [
@@ -118,6 +118,7 @@ attempt = 1
 print('** Enter a word (or DONE to terminate) **')
 word = input('> ')
 while word != 'DONE':
+    word = word.strip()
     url = 'https://api.dictionaryapi.dev/api/v2/entries/en/' + word
     try:
         resp = requests.get(url, allow_redirects = True)
