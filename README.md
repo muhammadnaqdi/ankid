@@ -12,7 +12,7 @@ pip install requests genanki
 
 ## Usage
 
-Run the script using python/python3:
+Run the script using python3:
 
 ```shell
 python3 ankid.py
